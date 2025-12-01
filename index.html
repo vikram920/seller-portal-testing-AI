@@ -1,0 +1,1966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Seller Panel - E-commerce</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-alt: #151a2c;
+      --bg-soft: #1e2337;
+      --accent: #4f46e5;
+      --accent-soft: rgba(79, 70, 229, 0.18);
+      --accent-strong: #6366f1;
+      --accent-danger: #ef4444;
+      --accent-success: #22c55e;
+      --accent-warning: #f59e0b;
+      --border: #252b42;
+      --text: #f9fafb;
+      --text-dim: #a5b4cf;
+      --text-soft: #9ca3af;
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.55);
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #111827, #020617 50%, #020617 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      overflow: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Layout */
+    .app-shell {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      height: 100vh;
+      backdrop-filter: blur(18px);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: linear-gradient(180deg, #020617, #020617 40%, #020617);
+      border-right: 1px solid rgba(148, 163, 184, 0.18);
+      padding: 18px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: radial-gradient(circle at top left, #4f46e5 0, transparent 55%);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .sidebar-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: conic-gradient(from 200deg, #4f46e5, #22c55e, #f97316, #4f46e5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      color: white;
+    }
+
+    .sidebar-title {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+
+    .sidebar-title span:first-child {
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+
+    .sidebar-title span:last-child {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 8px;
+      flex: 1;
+    }
+
+    .nav-section-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      margin: 10px 6px 6px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      color: var(--text-dim);
+      transition: 0.16s ease-out;
+    }
+
+    .nav-item:hover {
+      background: rgba(15, 23, 42, 0.65);
+      border-color: rgba(148, 163, 184, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .nav-item.active {
+      background: linear-gradient(90deg, rgba(79, 70, 229, 0.18), rgba(79, 70, 229, 0.02));
+      border-color: rgba(129, 140, 248, 0.6);
+      color: var(--text);
+      box-shadow: 0 0 0 1px rgba(30, 64, 175, 0.5);
+    }
+
+    .nav-icon {
+      width: 22px;
+      text-align: center;
+      font-size: 15px;
+    }
+
+    .nav-label-main {
+      flex: 1;
+    }
+
+    .nav-chip {
+      font-size: 10px;
+      padding: 1px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .sidebar-footer {
+      font-size: 11px;
+      color: var(--text-soft);
+      border-top: 1px solid rgba(30, 64, 175, 0.45);
+      padding-top: 8px;
+      margin-top: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .badge-pill {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      padding: 3px 8px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* Main content */
+    .main {
+      padding: 16px 18px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow: hidden;
+    }
+
+    .main-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .main-title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .main-title {
+      font-size: 20px;
+      font-weight: 650;
+    }
+
+    .main-subtitle {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .main-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      padding: 7px 12px;
+      font-size: 12px;
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.14s;
+    }
+
+    .btn:hover {
+      border-color: rgba(129, 140, 248, 0.8);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: radial-gradient(circle at top, #4f46e5, #1d4ed8);
+      border-color: rgba(191, 219, 254, 0.9);
+      box-shadow: 0 16px 35px rgba(37, 99, 235, 0.55);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.07);
+    }
+
+    .chip {
+      font-size: 10px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: var(--text-soft);
+    }
+
+    /* Cards & layout */
+    .content-scroll {
+      flex: 1;
+      overflow: auto;
+      padding-right: 4px;
+      padding-bottom: 4px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(79, 70, 229, 0.12), rgba(15, 23, 42, 0.94));
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      padding: 12px 12px 11px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .card-soft {
+      background: radial-gradient(circle at top, rgba(55, 65, 81, 0.55), rgba(15, 23, 42, 0.9));
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--text-dim);
+    }
+
+    .card-value {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .card-meta {
+      font-size: 11px;
+      color: var(--text-soft);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .pill-up {
+      color: var(--accent-success);
+      font-size: 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(34, 197, 94, 0.5);
+      padding: 1px 6px;
+      background: rgba(22, 101, 52, 0.24);
+    }
+
+    .pill-down {
+      color: var(--accent-danger);
+      border-color: rgba(239, 68, 68, 0.5);
+      background: rgba(127, 29, 29, 0.2);
+    }
+
+    .layout-two {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 10px;
+    }
+
+    /* Tables */
+    .table-card {
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      padding: 10px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .table-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .table-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .table-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .table-subtitle {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .table-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .input, .select {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      padding: 5px 10px;
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      font-size: 11px;
+      outline: none;
+      min-width: 0;
+    }
+
+    .input::placeholder {
+      color: var(--text-soft);
+    }
+
+    .table-wrapper {
+      overflow: auto;
+      margin-top: 4px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 11px;
+    }
+
+    th, td {
+      padding: 6px 7px;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-soft);
+      border-bottom: 1px solid rgba(75, 85, 99, 0.75);
+      background: rgba(15, 23, 42, 0.95);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tr:nth-child(even) td {
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    tr:nth-child(odd) td {
+      background: rgba(15, 23, 42, 0.92);
+    }
+
+    tr:hover td {
+      background: rgba(30, 64, 175, 0.3);
+    }
+
+    .status-pill {
+      border-radius: 999px;
+      padding: 2px 7px;
+      font-size: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+    }
+
+    .status-active {
+      border-color: rgba(22, 163, 74, 0.7);
+      background: rgba(22, 163, 74, 0.12);
+      color: var(--accent-success);
+    }
+
+    .status-inactive {
+      border-color: rgba(148, 163, 184, 0.7);
+      background: rgba(31, 41, 55, 0.8);
+      color: var(--text-soft);
+    }
+
+    .status-pending {
+      border-color: rgba(234, 179, 8, 0.8);
+      background: rgba(202, 138, 4, 0.16);
+      color: var(--accent-warning);
+    }
+
+    .status-paid {
+      border-color: rgba(22, 163, 74, 0.7);
+      background: rgba(21, 128, 61, 0.25);
+      color: var(--accent-success);
+    }
+
+    .status-failed {
+      border-color: rgba(239, 68, 68, 0.8);
+      background: rgba(153, 27, 27, 0.26);
+      color: var(--accent-danger);
+    }
+
+    .status-progress {
+      border-color: rgba(59, 130, 246, 0.8);
+      background: rgba(37, 99, 235, 0.16);
+      color: #60a5fa;
+    }
+
+    .table-actions {
+      display: flex;
+      gap: 4px;
+    }
+
+    .btn-icon {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      width: 24px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      cursor: pointer;
+      background: rgba(15, 23, 42, 0.95);
+      transition: 0.15s;
+    }
+
+    .btn-icon:hover {
+      border-color: rgba(129, 140, 248, 0.9);
+      background: rgba(30, 64, 175, 0.65);
+    }
+
+    /* Profile / forms */
+    .two-col-form {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      font-size: 11px;
+    }
+
+    .form-label {
+      color: var(--text-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      font-size: 10px;
+    }
+
+    .input-area {
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      padding: 7px 9px;
+      background: rgba(15, 23, 42, 0.92);
+      color: var(--text);
+      font-size: 12px;
+      outline: none;
+      resize: vertical;
+      min-height: 66px;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    /* Analytics mini chart */
+    .mini-bar-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 70px;
+      margin-top: 4px;
+    }
+
+    .mini-bar {
+      flex: 1;
+      border-radius: 999px 999px 4px 4px;
+      background: linear-gradient(180deg, #4f46e5, #0b1120);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mini-bar::after {
+      content: attr(data-label);
+      position: absolute;
+      bottom: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      color: rgba(209, 213, 219, 0.9);
+    }
+
+    .mini-bar span {
+      position: absolute;
+      top: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      color: rgba(248, 250, 252, 0.95);
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 1024px) {
+      .app-shell {
+        grid-template-columns: 70px minmax(0, 1fr);
+      }
+
+      .sidebar-title span:last-child,
+      .sidebar-title span:first-child {
+        display: none;
+      }
+
+      .sidebar-header {
+        justify-content: center;
+      }
+
+      .nav-label-main,
+      .nav-chip,
+      .sidebar-footer span:first-child {
+        display: none;
+      }
+
+      .badge-pill {
+        margin-left: auto;
+      }
+
+      .grid-3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .layout-two {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        overflow: auto;
+      }
+
+      .app-shell {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+
+      .sidebar {
+        flex-direction: row;
+        overflow-x: auto;
+        height: auto;
+      }
+
+      .main {
+        height: auto;
+      }
+
+      .grid-3 {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .two-col-form {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">S</div>
+      <div class="sidebar-title">
+        <span>Seller Hub</span>
+        <span>Control panel for merchants</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">main</div>
+      <div class="nav-item active" data-section="dashboard">
+        <div class="nav-icon">📊</div>
+        <div class="nav-label-main">Dashboard</div>
+        <div class="nav-chip">live</div>
+      </div>
+
+      <div class="nav-section-label">commerce</div>
+      <div class="nav-item" data-section="products">
+        <div class="nav-icon">📦</div>
+        <div class="nav-label-main">Products</div>
+      </div>
+      <div class="nav-item" data-section="orders">
+        <div class="nav-icon">📬</div>
+        <div class="nav-label-main">Orders</div>
+      </div>
+      <div class="nav-item" data-section="payments">
+        <div class="nav-icon">💰</div>
+        <div class="nav-label-main">Payments</div>
+      </div>
+      <div class="nav-item" data-section="analytics">
+        <div class="nav-icon">📈</div>
+        <div class="nav-label-main">Analytics</div>
+      </div>
+
+      <div class="nav-section-label">account</div>
+      <div class="nav-item" data-section="profile">
+        <div class="nav-icon">👤</div>
+        <div class="nav-label-main">Seller Profile</div>
+      </div>
+      <div class="nav-item" data-section="bank">
+        <div class="nav-icon">🏦</div>
+        <div class="nav-label-main">Bank Details</div>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <span>Sandbox demo</span>
+      <span class="badge-pill">v1.0</span>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <header class="main-header">
+      <div class="main-title-block">
+        <div class="main-title" id="page-title">Dashboard</div>
+        <div class="main-subtitle" id="page-subtitle">
+          Overview of sales, orders, and payouts.
+        </div>
+      </div>
+      <div class="main-actions">
+        <span class="chip" id="seller-name-chip">Seller: Demo Store</span>
+        <button class="btn" id="refresh-data-btn">↻ Sync (Demo)</button>
+        <button class="btn btn-primary" id="quick-add-product-btn">＋ Add Product</button>
+      </div>
+    </header>
+
+    <div class="content-scroll">
+      <!-- Dashboard Section -->
+      <section class="section active" id="section-dashboard">
+        <div class="grid-3">
+          <div class="card card-soft">
+            <div class="card-header">
+              <div class="card-title">Today's Sales</div>
+              <span class="chip">Live</span>
+            </div>
+            <div class="card-value" id="dash-today-sales">₹0</div>
+            <div class="card-meta">
+              <span id="dash-today-orders">0 orders</span>
+              <span class="pill-up" id="dash-sales-change">+0% vs yesterday</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Pending Orders</div>
+            </div>
+            <div class="card-value" id="dash-pending-orders">0</div>
+            <div class="card-meta">
+              <span>Need processing (pick/pack/dispatch)</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Next Payout</div>
+            </div>
+            <div class="card-value" id="dash-next-payout">₹0</div>
+            <div class="card-meta">
+              <span id="dash-next-payout-date">–</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="layout-two">
+          <div class="table-card">
+            <div class="table-header">
+              <div class="table-header-left">
+                <div class="table-title">Recent Orders</div>
+                <div class="table-subtitle">Last 10 orders from all channels</div>
+              </div>
+              <div class="table-controls">
+                <select class="select" id="dash-orders-filter">
+                  <option value="all">All</option>
+                  <option value="pending">Pending</option>
+                  <option value="processing">Processing</option>
+                  <option value="delivered">Delivered</option>
+                </select>
+              </div>
+            </div>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                <tr>
+                  <th>Order #</th>
+                  <th>Date</th>
+                  <th>Customer</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                </tr>
+                </thead>
+                <tbody id="dash-orders-body">
+                <!-- Filled by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">7-Day Revenue Trend</div>
+              <span class="chip">Mock data</span>
+            </div>
+            <div class="mini-bar-chart" id="mini-bar-chart">
+              <!-- Bars created by JS -->
+            </div>
+            <div class="card-meta">
+              <span>Use real analytics data here from backend.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Products Section -->
+      <section class="section" id="section-products">
+        <div class="table-card">
+          <div class="table-header">
+            <div class="table-header-left">
+              <div class="table-title">Product Catalog</div>
+              <div class="table-subtitle">Manage listings, prices, and stock</div>
+            </div>
+            <div class="table-controls">
+              <input class="input" id="products-search" placeholder="Search by name / SKU" />
+              <select class="select" id="products-status-filter">
+                <option value="all">All statuses</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+              <button class="btn btn-primary" id="add-product-btn">＋ Add</button>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+              <tr>
+                <th>SKU</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>MRP</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+              </thead>
+              <tbody id="products-body">
+              <!-- JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Orders Section -->
+      <section class="section" id="section-orders">
+        <div class="table-card">
+          <div class="table-header">
+            <div class="table-header-left">
+              <div class="table-title">Orders</div>
+              <div class="table-subtitle">Process pick → pack → dispatch → delivery</div>
+            </div>
+            <div class="table-controls">
+              <select class="select" id="orders-status-filter">
+                <option value="all">All</option>
+                <option value="PLACED">Placed</option>
+                <option value="PICKED">Picked</option>
+                <option value="PACKED">Packed</option>
+                <option value="DISPATCHED">Dispatched</option>
+                <option value="OUT_FOR_DELIVERY">Out for delivery</option>
+                <option value="DELIVERED">Delivered</option>
+                <option value="CANCELLED">Cancelled</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Payment</th>
+                <th>Fulfilment</th>
+                <th>Update Status</th>
+              </tr>
+              </thead>
+              <tbody id="orders-body">
+              <!-- JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Payments Section -->
+      <section class="section" id="section-payments">
+        <div class="grid-3">
+          <div class="card card-soft">
+            <div class="card-header">
+              <div class="card-title">Total Paid</div>
+            </div>
+            <div class="card-value" id="pay-total-paid">₹0</div>
+            <div class="card-meta">
+              <span id="pay-total-txns">0 payouts received</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Pending Payouts</div>
+            </div>
+            <div class="card-value" id="pay-pending">₹0</div>
+            <div class="card-meta">
+              <span id="pay-pending-count">0 orders pending</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Average Settlement Days</div>
+            </div>
+            <div class="card-value" id="pay-avg-days">–</div>
+            <div class="card-meta">
+              <span>Based on completed payouts</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-header">
+            <div class="table-header-left">
+              <div class="table-title">Payout Transactions</div>
+              <div class="table-subtitle">From marketplace to your bank</div>
+            </div>
+            <div class="table-controls">
+              <select class="select" id="payments-status-filter">
+                <option value="all">All</option>
+                <option value="PAID">Paid</option>
+                <option value="PENDING">Pending</option>
+                <option value="FAILED">Failed</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+              <tr>
+                <th>Payout #</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Orders</th>
+                <th>Status</th>
+              </tr>
+              </thead>
+              <tbody id="payments-body">
+              <!-- JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Analytics Section -->
+      <section class="section" id="section-analytics">
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Conversion Rate</div>
+            </div>
+            <div class="card-value" id="an-conversion">3.4%</div>
+            <div class="card-meta">
+              <span>Visits → Orders</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Top Product</div>
+            </div>
+            <div class="card-value" id="an-top-product">–</div>
+            <div class="card-meta">
+              <span id="an-top-product-info">by revenue</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Repeat Customers</div>
+            </div>
+            <div class="card-value" id="an-repeat-rate">–</div>
+            <div class="card-meta">
+              <span>Based on mock logic here</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-header">
+            <div class="table-header-left">
+              <div class="table-title">SKUs Performance</div>
+              <div class="table-subtitle">Units sold and revenue by product</div>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+              <tr>
+                <th>SKU</th>
+                <th>Name</th>
+                <th>Units Sold</th>
+                <th>Revenue</th>
+              </tr>
+              </thead>
+              <tbody id="analytics-products-body">
+              <!-- JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Seller Profile Section -->
+      <section class="section" id="section-profile">
+        <div class="table-card">
+          <div class="table-header">
+            <div class="table-header-left">
+              <div class="table-title">Seller Profile</div>
+              <div class="table-subtitle">Store identity and contact info</div>
+            </div>
+          </div>
+
+          <div class="two-col-form" style="margin-top: 10px;">
+            <div class="form-group">
+              <label class="form-label">Store Name</label>
+              <input class="input" id="profile-store-name" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contact Person</label>
+              <input class="input" id="profile-contact-person" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input class="input" id="profile-email" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone</label>
+              <input class="input" id="profile-phone" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">GSTIN / Tax ID</label>
+              <input class="input" id="profile-gst" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Warehouse Pincode</label>
+              <input class="input" id="profile-pincode" />
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top: 10px;">
+            <label class="form-label">Store Address</label>
+            <textarea class="input-area" id="profile-address"></textarea>
+          </div>
+
+          <div style="margin-top: 10px; display: flex; justify-content: flex-end; gap: 8px;">
+            <button class="btn" id="profile-reset-btn">Reset</button>
+            <button class="btn btn-primary" id="profile-save-btn">Save Profile</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bank Details Section -->
+      <section class="section" id="section-bank">
+        <div class="table-card">
+          <div class="table-header">
+            <div class="table-header-left">
+              <div class="table-title">Bank Details</div>
+              <div class="table-subtitle">Payout destination for marketplace settlements</div>
+            </div>
+          </div>
+
+          <div class="two-col-form" style="margin-top: 10px;">
+            <div class="form-group">
+              <label class="form-label">Account Holder Name</label>
+              <input class="input" id="bank-holder" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Account Number</label>
+              <input class="input" id="bank-account" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">IFSC Code</label>
+              <input class="input" id="bank-ifsc" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Bank Name</label>
+              <input class="input" id="bank-name" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Branch</label>
+              <input class="input" id="bank-branch" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Account Type</label>
+              <select class="select" id="bank-type">
+                <option value="SAVINGS">Savings</option>
+                <option value="CURRENT">Current</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="margin-top: 10px; display: flex; justify-content: flex-end; gap: 8px;">
+            <button class="btn" id="bank-reset-btn">Reset</button>
+            <button class="btn btn-primary" id="bank-save-btn">Save Bank Details</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<!-- Product Modal -->
+<div id="product-modal-backdrop" style="
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+">
+  <div style="
+    background: radial-gradient(circle at top left, rgba(79,70,229,0.25), rgba(15,23,42,0.98));
+    border-radius: 18px;
+    border: 1px solid rgba(148,163,184,0.7);
+    width: min(600px, 92vw);
+    padding: 16px 16px 14px;
+    box-shadow: 0 26px 60px rgba(0,0,0,0.75);
+  ">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px;">
+      <div style="font-size:14px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em;">
+        <span id="product-modal-title">Add Product</span>
+      </div>
+      <button class="btn-icon" id="product-modal-close">✕</button>
+    </div>
+
+    <div class="two-col-form">
+      <div class="form-group">
+        <label class="form-label">SKU</label>
+        <input class="input" id="pm-sku" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Name</label>
+        <input class="input" id="pm-name" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <input class="input" id="pm-category" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select class="select" id="pm-status">
+          <option value="ACTIVE">Active</option>
+          <option value="INACTIVE">Inactive</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">MRP</label>
+        <input class="input" type="number" id="pm-mrp" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Selling Price</label>
+        <input class="input" type="number" id="pm-price" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Stock Qty</label>
+        <input class="input" type="number" id="pm-stock" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Image URL (optional)</label>
+        <input class="input" id="pm-image" />
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-top:8px;">
+      <label class="form-label">Description</label>
+      <textarea class="input-area" id="pm-description" style="min-height:60px;"></textarea>
+    </div>
+
+    <div style="margin-top:10px; display:flex; justify-content:flex-end; gap:8px;">
+      <button class="btn" id="product-modal-cancel">Cancel</button>
+      <button class="btn btn-primary" id="product-modal-save">Save Product</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --- Simple Demo "Backend" State + LocalStorage -------------------------
+  const STORAGE_KEY = "demo_seller_panel_state_v1";
+
+  const defaultState = {
+    sellerProfile: {
+      storeName: "Demo Store",
+      contactPerson: "John Doe",
+      email: "seller@example.com",
+      phone: "+91-9876543210",
+      gst: "29ABCDE1234F1Z5",
+      pincode: "560001",
+      address: "221B, Baker Street, Bengaluru, India"
+    },
+    bankDetails: {
+      holder: "John Doe",
+      account: "123456789012",
+      ifsc: "HDFC0000123",
+      bankName: "HDFC Bank",
+      branch: "MG Road",
+      type: "CURRENT"
+    },
+    products: [
+      {
+        id: "P001",
+        sku: "TSHIRT-M-BLK",
+        name: "Men's Cotton T-Shirt - Black",
+        category: "Apparel > Men > T-Shirts",
+        mrp: 799,
+        price: 499,
+        stock: 120,
+        status: "ACTIVE"
+      },
+      {
+        id: "P002",
+        sku: "SHOES-RUN-RED-9",
+        name: "Running Shoes - Red (Size 9)",
+        category: "Footwear > Sports",
+        mrp: 2999,
+        price: 1999,
+        stock: 42,
+        status: "ACTIVE"
+      },
+      {
+        id: "P003",
+        sku: "MOBILE-CASE-ULTRA",
+        name: "Shockproof Mobile Case",
+        category: "Accessories > Mobile",
+        mrp: 599,
+        price: 349,
+        stock: 0,
+        status: "INACTIVE"
+      }
+    ],
+    orders: [
+      {
+        id: "O1001",
+        date: "2025-11-23",
+        customer: "Amit Kumar",
+        items: 3,
+        total: 2497,
+        paymentStatus: "PAID",
+        fulfilment: "PLACED"
+      },
+      {
+        id: "O1002",
+        date: "2025-11-23",
+        customer: "Sara Ali",
+        items: 1,
+        total: 1999,
+        paymentStatus: "PAID",
+        fulfilment: "OUT_FOR_DELIVERY"
+      },
+      {
+        id: "O1003",
+        date: "2025-11-22",
+        customer: "Rohan Gupta",
+        items: 2,
+        total: 1098,
+        paymentStatus: "PAID",
+        fulfilment: "DELIVERED"
+      },
+      {
+        id: "O1004",
+        date: "2025-11-22",
+        customer: "Sneha Patil",
+        items: 1,
+        total: 499,
+        paymentStatus: "PENDING",
+        fulfilment: "PLACED"
+      }
+    ],
+    payouts: [
+      {
+        id: "TXN-9001",
+        date: "2025-11-20",
+        amount: 12000,
+        orders: 24,
+        status: "PAID"
+      },
+      {
+        id: "TXN-9002",
+        date: "2025-11-25",
+        amount: 8300,
+        orders: 15,
+        status: "PENDING"
+      },
+      {
+        id: "TXN-9003",
+        date: "2025-11-10",
+        amount: 15000,
+        orders: 30,
+        status: "PAID"
+      }
+    ]
+  };
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        return { ...defaultState, ...parsed }; // merge with defaults
+      }
+    } catch (e) {
+      console.warn("Failed to parse state, using defaults", e);
+    }
+    return structuredClone(defaultState);
+  }
+
+  function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  let state = loadState();
+
+  // --- Utility functions ---------------------------------------------------
+  function formatCurrency(amount) {
+    return "₹" + Number(amount || 0).toLocaleString("en-IN", {
+      maximumFractionDigits: 2
+    });
+  }
+
+  function updatePageHeader(section) {
+    const title = document.getElementById("page-title");
+    const subtitle = document.getElementById("page-subtitle");
+    const map = {
+      dashboard: ["Dashboard", "Overview of sales, orders, and payouts."],
+      products: ["Products", "Create, edit, and manage all your SKUs."],
+      orders: ["Orders", "Process and track order fulfilment stages."],
+      payments: ["Payments", "Monitor payouts and settlement health."],
+      analytics: ["Analytics", "Understand performance across products."],
+      profile: ["Seller Profile", "Keep your business information up-to-date."],
+      bank: ["Bank Details", "Configure payout destination and account info."]
+    };
+    const [t, s] = map[section];
+    title.textContent = t;
+    subtitle.textContent = s;
+  }
+
+  function setSellerChip() {
+    const el = document.getElementById("seller-name-chip");
+    el.textContent = "Seller: " + (state.sellerProfile.storeName || "Demo Store");
+  }
+
+  // --- Navigation ----------------------------------------------------------
+  const navItems = document.querySelectorAll(".nav-item");
+  navItems.forEach(item => {
+    item.addEventListener("click", () => {
+      const section = item.getAttribute("data-section");
+      document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+      item.classList.add("active");
+
+      document.querySelectorAll(".section").forEach(sec => sec.classList.remove("active"));
+      document.getElementById("section-" + section).classList.add("active");
+
+      updatePageHeader(section);
+    });
+  });
+
+  // --- Dashboard rendering -------------------------------------------------
+  function computeDashboardStats() {
+    const today = new Date().toISOString().slice(0, 10);
+    let todaySales = 0;
+    let todayOrders = 0;
+    let pendingOrders = 0;
+
+    state.orders.forEach(o => {
+      if (o.date === today && o.paymentStatus === "PAID") {
+        todaySales += o.total;
+        todayOrders += 1;
+      }
+      if (["PLACED", "PICKED", "PACKED", "DISPATCHED", "OUT_FOR_DELIVERY"].includes(o.fulfilment)) {
+        pendingOrders += 1;
+      }
+    });
+
+    // naive dummy numbers for comparison
+    const yesterdaySales = todaySales * 0.7;
+    const change =
+      yesterdaySales === 0
+        ? 100
+        : Math.round(((todaySales - yesterdaySales) / yesterdaySales) * 100);
+
+    return { todaySales, todayOrders, pendingOrders, change };
+  }
+
+  function renderDashboardCards() {
+    const { todaySales, todayOrders, pendingOrders, change } = computeDashboardStats();
+
+    document.getElementById("dash-today-sales").textContent = formatCurrency(todaySales);
+    document.getElementById("dash-today-orders").textContent = todayOrders + " orders";
+    const changeEl = document.getElementById("dash-sales-change");
+    changeEl.textContent =
+      (change >= 0 ? "+" : "") + change + "% vs yesterday";
+    changeEl.className = "pill-up " + (change < 0 ? "pill-down" : "");
+
+    document.getElementById("dash-pending-orders").textContent = pendingOrders;
+
+    // Next payout
+    const pending = state.payouts.find(p => p.status === "PENDING");
+    document.getElementById("dash-next-payout").textContent = pending
+      ? formatCurrency(pending.amount)
+      : "₹0";
+    document.getElementById("dash-next-payout-date").textContent = pending
+      ? `Scheduled on ${pending.date}`
+      : "No payout scheduled.";
+  }
+
+  function renderDashboardOrders() {
+    const tbody = document.getElementById("dash-orders-body");
+    tbody.innerHTML = "";
+    const filter = document.getElementById("dash-orders-filter").value;
+
+    const mapped = state.orders
+      .slice()
+      .sort((a, b) => (a.date < b.date ? 1 : -1))
+      .slice(0, 10);
+
+    mapped.forEach(order => {
+      let bucket = "other";
+      if (["PLACED"].includes(order.fulfilment)) bucket = "pending";
+      else if (
+        ["PICKED", "PACKED", "DISPATCHED", "OUT_FOR_DELIVERY"].includes(order.fulfilment)
+      )
+        bucket = "processing";
+      else if (order.fulfilment === "DELIVERED") bucket = "delivered";
+
+      if (filter !== "all" && filter !== bucket) return;
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${order.id}</td>
+        <td>${order.date}</td>
+        <td>${order.customer}</td>
+        <td>${formatCurrency(order.total)}</td>
+        <td>
+          <span class="status-pill ${
+            order.fulfilment === "DELIVERED"
+              ? "status-paid"
+              : "status-progress"
+          }">${order.fulfilment.replace(/_/g, " ")}</span>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function renderMiniBarChart() {
+    const container = document.getElementById("mini-bar-chart");
+    container.innerHTML = "";
+    // Dummy weekly numbers derived from orders total
+    const totalsByDay = [0, 0, 0, 0, 0, 0, 0];
+    const dayLabels = ["M", "T", "W", "T", "F", "S", "S"];
+
+    state.orders.forEach(o => {
+      const d = new Date(o.date);
+      if (!isNaN(d)) {
+        const day = d.getDay(); // 0-6 Sun-Sat
+        const idx = (day + 6) % 7; // make Monday = 0
+        if (o.paymentStatus === "PAID") {
+          totalsByDay[idx] += o.total;
+        }
+      }
+    });
+
+    const max = Math.max(...totalsByDay, 1);
+
+    totalsByDay.forEach((value, i) => {
+      const bar = document.createElement("div");
+      bar.className = "mini-bar";
+      const heightPercent = (value / max) * 100;
+      bar.style.height = Math.max(8, heightPercent) + "%";
+      bar.setAttribute("data-label", dayLabels[i]);
+      const span = document.createElement("span");
+      span.textContent = value ? (value / 1000).toFixed(1) + "k" : "";
+      bar.appendChild(span);
+      container.appendChild(bar);
+    });
+  }
+
+  // --- Products rendering --------------------------------------------------
+  function renderProducts() {
+    const tbody = document.getElementById("products-body");
+    tbody.innerHTML = "";
+    const search = document.getElementById("products-search").value.toLowerCase();
+    const statusFilter = document.getElementById("products-status-filter").value;
+
+    state.products.forEach(product => {
+      if (
+        search &&
+        !(
+          product.name.toLowerCase().includes(search) ||
+          product.sku.toLowerCase().includes(search)
+        )
+      )
+        return;
+
+      if (statusFilter !== "all" && product.status.toLowerCase() !== statusFilter)
+        return;
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${product.sku}</td>
+        <td>${product.name}</td>
+        <td>${product.category}</td>
+        <td>${formatCurrency(product.mrp)}</td>
+        <td>${formatCurrency(product.price)}</td>
+        <td>${product.stock}</td>
+        <td>
+          <span class="status-pill ${
+            product.status === "ACTIVE" ? "status-active" : "status-inactive"
+          }">${product.status}</span>
+        </td>
+        <td>
+          <div class="table-actions">
+            <button class="btn-icon" data-action="edit" data-id="${product.id}">✏️</button>
+            <button class="btn-icon" data-action="stock" data-id="${product.id}">📥</button>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // --- Orders rendering ----------------------------------------------------
+  const fulfilmentOrder = [
+    "PLACED",
+    "PICKED",
+    "PACKED",
+    "DISPATCHED",
+    "OUT_FOR_DELIVERY",
+    "DELIVERED",
+    "CANCELLED"
+  ];
+
+  function renderOrders() {
+    const tbody = document.getElementById("orders-body");
+    tbody.innerHTML = "";
+    const filter = document.getElementById("orders-status-filter").value;
+
+    state.orders.forEach(order => {
+      if (filter !== "all" && order.fulfilment !== filter) return;
+
+      const tr = document.createElement("tr");
+      const options = fulfilmentOrder
+        .map(
+          s =>
+            `<option value="${s}" ${
+              s === order.fulfilment ? "selected" : ""
+            }>${s.replace(/_/g, " ")}</option>`
+        )
+        .join("");
+
+      tr.innerHTML = `
+        <td>${order.id}</td>
+        <td>${order.date}</td>
+        <td>${order.customer}</td>
+        <td>${order.items}</td>
+        <td>${formatCurrency(order.total)}</td>
+        <td>
+          <span class="status-pill ${
+            order.paymentStatus === "PAID"
+              ? "status-paid"
+              : order.paymentStatus === "FAILED"
+              ? "status-failed"
+              : "status-pending"
+          }">${order.paymentStatus}</span>
+        </td>
+        <td>
+          <span class="status-pill ${
+            order.fulfilment === "DELIVERED"
+              ? "status-paid"
+              : "status-progress"
+          }">${order.fulfilment.replace(/_/g, " ")}</span>
+        </td>
+        <td>
+          <select class="select order-status-select" data-id="${order.id}">
+            ${options}
+          </select>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // --- Payments rendering --------------------------------------------------
+  function renderPayments() {
+    const tbody = document.getElementById("payments-body");
+    tbody.innerHTML = "";
+    const filter = document.getElementById("payments-status-filter").value;
+
+    let totalPaid = 0;
+    let paidCount = 0;
+    let pendingAmount = 0;
+    let pendingCount = 0;
+    const settlementDays = [];
+
+    state.payouts.forEach(p => {
+      if (filter !== "all" && p.status !== filter) return;
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${p.id}</td>
+        <td>${p.date}</td>
+        <td>${formatCurrency(p.amount)}</td>
+        <td>${p.orders}</td>
+        <td>
+          <span class="status-pill ${
+            p.status === "PAID"
+              ? "status-paid"
+              : p.status === "PENDING"
+              ? "status-pending"
+              : "status-failed"
+          }">${p.status}</span>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    state.payouts.forEach(p => {
+      if (p.status === "PAID") {
+        totalPaid += p.amount;
+        paidCount++;
+        // Fake settlement days
+        settlementDays.push(7 + Math.floor(Math.random() * 4));
+      }
+      if (p.status === "PENDING") {
+        pendingAmount += p.amount;
+        pendingCount++;
+      }
+    });
+
+    document.getElementById("pay-total-paid").textContent = formatCurrency(totalPaid);
+    document.getElementById("pay-total-txns").textContent =
+      paidCount + " payouts received";
+    document.getElementById("pay-pending").textContent = formatCurrency(pendingAmount);
+    document.getElementById("pay-pending-count").textContent =
+      pendingCount + " payouts pending";
+
+    const avg =
+      settlementDays.length === 0
+        ? "–"
+        : (settlementDays.reduce((a, b) => a + b, 0) / settlementDays.length).toFixed(1);
+    document.getElementById("pay-avg-days").textContent =
+      avg === "–" ? "–" : avg + " days";
+  }
+
+  // --- Analytics rendering -------------------------------------------------
+  function renderAnalytics() {
+    // Top product by revenue (from orders x simple split)
+    const revenuePerSku = {};
+    const unitsPerSku = {};
+
+    // Very rough: assume first product often used in demo orders
+    state.orders.forEach(o => {
+      if (o.paymentStatus !== "PAID") return;
+      state.products.forEach((p, idx) => {
+        const fraction = 1 / state.products.length;
+        const rev = o.total * fraction;
+        const units = (o.items * fraction) || 1;
+        revenuePerSku[p.sku] = (revenuePerSku[p.sku] || 0) + rev;
+        unitsPerSku[p.sku] = (unitsPerSku[p.sku] || 0) + units;
+      });
+    });
+
+    let topSku = null;
+    let maxRev = 0;
+    Object.entries(revenuePerSku).forEach(([sku, rev]) => {
+      if (rev > maxRev) {
+        maxRev = rev;
+        topSku = sku;
+      }
+    });
+
+    const topProduct = state.products.find(p => p.sku === topSku) || state.products[0];
+
+    document.getElementById("an-top-product").textContent = topProduct
+      ? topProduct.name
+      : "–";
+    document.getElementById("an-top-product-info").textContent = topProduct
+      ? `${topProduct.sku} • ${formatCurrency(maxRev)}`
+      : "No data";
+
+    // Fake repeat rate
+    document.getElementById("an-repeat-rate").textContent = "21%";
+
+    const tbody = document.getElementById("analytics-products-body");
+    tbody.innerHTML = "";
+    state.products.forEach(p => {
+      const units = unitsPerSku[p.sku] || 0;
+      const rev = revenuePerSku[p.sku] || 0;
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${p.sku}</td>
+        <td>${p.name}</td>
+        <td>${units.toFixed(0)}</td>
+        <td>${formatCurrency(rev.toFixed(0))}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // --- Profile & Bank forms -----------------------------------------------
+  function loadProfileForm() {
+    const sp = state.sellerProfile;
+    document.getElementById("profile-store-name").value = sp.storeName || "";
+    document.getElementById("profile-contact-person").value = sp.contactPerson || "";
+    document.getElementById("profile-email").value = sp.email || "";
+    document.getElementById("profile-phone").value = sp.phone || "";
+    document.getElementById("profile-gst").value = sp.gst || "";
+    document.getElementById("profile-pincode").value = sp.pincode || "";
+    document.getElementById("profile-address").value = sp.address || "";
+  }
+
+  function loadBankForm() {
+    const b = state.bankDetails;
+    document.getElementById("bank-holder").value = b.holder || "";
+    document.getElementById("bank-account").value = b.account || "";
+    document.getElementById("bank-ifsc").value = b.ifsc || "";
+    document.getElementById("bank-name").value = b.bankName || "";
+    document.getElementById("bank-branch").value = b.branch || "";
+    document.getElementById("bank-type").value = b.type || "SAVINGS";
+  }
+
+  // --- Product modal logic -------------------------------------------------
+  const productModalBackdrop = document.getElementById("product-modal-backdrop");
+  const productModalTitle = document.getElementById("product-modal-title");
+  let editingProductId = null;
+
+  function openProductModal(product) {
+    productModalBackdrop.style.display = "flex";
+    if (product) {
+      editingProductId = product.id;
+      productModalTitle.textContent = "Edit Product";
+      document.getElementById("pm-sku").value = product.sku;
+      document.getElementById("pm-name").value = product.name;
+      document.getElementById("pm-category").value = product.category;
+      document.getElementById("pm-status").value = product.status;
+      document.getElementById("pm-mrp").value = product.mrp;
+      document.getElementById("pm-price").value = product.price;
+      document.getElementById("pm-stock").value = product.stock;
+      document.getElementById("pm-image").value = product.image || "";
+      document.getElementById("pm-description").value = product.description || "";
+    } else {
+      editingProductId = null;
+      productModalTitle.textContent = "Add Product";
+      document.getElementById("pm-sku").value = "";
+      document.getElementById("pm-name").value = "";
+      document.getElementById("pm-category").value = "";
+      document.getElementById("pm-status").value = "ACTIVE";
+      document.getElementById("pm-mrp").value = "";
+      document.getElementById("pm-price").value = "";
+      document.getElementById("pm-stock").value = "";
+      document.getElementById("pm-image").value = "";
+      document.getElementById("pm-description").value = "";
+    }
+  }
+
+  function closeProductModal() {
+    productModalBackdrop.style.display = "none";
+  }
+
+  function handleProductModalSave() {
+    const sku = document.getElementById("pm-sku").value.trim();
+    const name = document.getElementById("pm-name").value.trim();
+    const category = document.getElementById("pm-category").value.trim();
+    const status = document.getElementById("pm-status").value;
+    const mrp = parseFloat(document.getElementById("pm-mrp").value || "0");
+    const price = parseFloat(document.getElementById("pm-price").value || "0");
+    const stock = parseInt(document.getElementById("pm-stock").value || "0", 10);
+    const image = document.getElementById("pm-image").value.trim();
+    const description = document.getElementById("pm-description").value.trim();
+
+    if (!sku || !name) {
+      alert("SKU and Name are required.");
+      return;
+    }
+
+    if (editingProductId) {
+      const idx = state.products.findIndex(p => p.id === editingProductId);
+      if (idx !== -1) {
+        state.products[idx] = {
+          ...state.products[idx],
+          sku,
+          name,
+          category,
+          status,
+          mrp,
+          price,
+          stock,
+          image,
+          description
+        };
+      }
+    } else {
+      const newId = "P" + Math.floor(Math.random() * 100000);
+      state.products.push({
+        id: newId,
+        sku,
+        name,
+        category,
+        status,
+        mrp,
+        price,
+        stock,
+        image,
+        description
+      });
+    }
+
+    saveState();
+    renderProducts();
+    renderAnalytics();
+    closeProductModal();
+  }
+
+  // --- Event listeners -----------------------------------------------------
+  document.getElementById("dash-orders-filter").addEventListener("change", () => {
+    renderDashboardOrders();
+  });
+
+  document.getElementById("products-search").addEventListener("input", () => {
+    renderProducts();
+  });
+
+  document.getElementById("products-status-filter").addEventListener("change", () => {
+    renderProducts();
+  });
+
+  document.getElementById("orders-status-filter").addEventListener("change", () => {
+    renderOrders();
+  });
+
+  document.getElementById("payments-status-filter").addEventListener("change", () => {
+    renderPayments();
+  });
+
+  document.getElementById("add-product-btn").addEventListener("click", () => {
+    openProductModal(null);
+  });
+
+  document.getElementById("quick-add-product-btn").addEventListener("click", () => {
+    // Jump to products tab + open modal
+    document.querySelector('[data-section="products"]').click();
+    openProductModal(null);
+  });
+
+  document.getElementById("product-modal-close").addEventListener("click", closeProductModal);
+  document.getElementById("product-modal-cancel").addEventListener("click", closeProductModal);
+  document.getElementById("product-modal-save").addEventListener("click", handleProductModalSave);
+
+  // Delegate product table actions (edit / stock)
+  document.getElementById("products-body").addEventListener("click", e => {
+    const btn = e.target.closest("button[data-action]");
+    if (!btn) return;
+    const id = btn.getAttribute("data-id");
+    const product = state.products.find(p => p.id === id);
+    if (!product) return;
+    const action = btn.getAttribute("data-action");
+    if (action === "edit") {
+      openProductModal(product);
+    } else if (action === "stock") {
+      const input = prompt(
+        `Enter new stock quantity for "${product.name}" (current: ${product.stock})`
+      );
+      if (input === null) return;
+      const qty = parseInt(input, 10);
+      if (isNaN(qty) || qty < 0) {
+        alert("Invalid stock quantity.");
+        return;
+      }
+      product.stock = qty;
+      saveState();
+      renderProducts();
+      renderAnalytics();
+    }
+  });
+
+  // Orders status update
+  document.getElementById("orders-body").addEventListener("change", e => {
+    const select = e.target.closest(".order-status-select");
+    if (!select) return;
+    const id = select.getAttribute("data-id");
+    const newStatus = select.value;
+    const order = state.orders.find(o => o.id === id);
+    if (!order) return;
+    order.fulfilment = newStatus;
+    saveState();
+    renderOrders();
+    renderDashboardCards();
+    renderDashboardOrders();
+  });
+
+  // Profile buttons
+  document.getElementById("profile-save-btn").addEventListener("click", () => {
+    state.sellerProfile = {
+      storeName: document.getElementById("profile-store-name").value.trim(),
+      contactPerson: document.getElementById("profile-contact-person").value.trim(),
+      email: document.getElementById("profile-email").value.trim(),
+      phone: document.getElementById("profile-phone").value.trim(),
+      gst: document.getElementById("profile-gst").value.trim(),
+      pincode: document.getElementById("profile-pincode").value.trim(),
+      address: document.getElementById("profile-address").value.trim()
+    };
+    saveState();
+    setSellerChip();
+    alert("Profile saved (demo).");
+  });
+
+  document.getElementById("profile-reset-btn").addEventListener("click", () => {
+    state.sellerProfile = structuredClone(defaultState.sellerProfile);
+    saveState();
+    loadProfileForm();
+    setSellerChip();
+  });
+
+  // Bank buttons
+  document.getElementById("bank-save-btn").addEventListener("click", () => {
+    state.bankDetails = {
+      holder: document.getElementById("bank-holder").value.trim(),
+      account: document.getElementById("bank-account").value.trim(),
+      ifsc: document.getElementById("bank-ifsc").value.trim(),
+      bankName: document.getElementById("bank-name").value.trim(),
+      branch: document.getElementById("bank-branch").value.trim(),
+      type: document.getElementById("bank-type").value
+    };
+    saveState();
+    alert("Bank details saved (demo).");
+  });
+
+  document.getElementById("bank-reset-btn").addEventListener("click", () => {
+    state.bankDetails = structuredClone(defaultState.bankDetails);
+    saveState();
+    loadBankForm();
+  });
+
+  // Refresh demo data
+  document.getElementById("refresh-data-btn").addEventListener("click", () => {
+    state = structuredClone(defaultState);
+    saveState();
+    initializeUI();
+    alert("Demo data reset.");
+  });
+
+  // --- Initialize ----------------------------------------------------------
+  function initializeUI() {
+    setSellerChip();
+    loadProfileForm();
+    loadBankForm();
+    renderDashboardCards();
+    renderDashboardOrders();
+    renderMiniBarChart();
+    renderProducts();
+    renderOrders();
+    renderPayments();
+    renderAnalytics();
+  }
+
+  initializeUI();
+</script>
+</body>
+</html>
